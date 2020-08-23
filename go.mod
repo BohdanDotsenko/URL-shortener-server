@@ -1,4 +1,4 @@
-module mod
+module github.com/BohdanDotsenko/URL-shortener-server
 
 go 1.14
 

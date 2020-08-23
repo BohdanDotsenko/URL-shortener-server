@@ -2,20 +2,24 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
+	"log"
 )
 
-type table struct {
+type links struct {
 	LongLink  string
 	ShotrLink string
 }
 
-//OpenDb create or open database
-func OpenDb() error {
+//PrepeareDb prepeare database
+func PrepeareDb() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", "db/db.sqlite3")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	fmt.Println("db")
-	return err
+	statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS links (LongLink TEXT, ShotrLink TEXT)")
+	if err != nil {
+		log.Fatal(err)
+	}
+	statement.Exec()
+	return db, err
 }
