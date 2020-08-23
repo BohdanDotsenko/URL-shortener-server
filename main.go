@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/BohdanDotsenko/URL-shortener-server/db"
+	"github.com/BohdanDotsenko/URL-shortener-server/tree/master/db"
 	_ "github.com/mattn/go-sqlite3"
 )
 
