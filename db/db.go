@@ -3,8 +3,6 @@ package db
 import (
 	"database/sql"
 	"fmt"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 type table struct {
@@ -12,13 +10,12 @@ type table struct {
 	ShotrLink string
 }
 
+//OpenDb create or open database
 func OpenDb() error {
 	db, err := sql.Open("sqlite3", "db/db.sqlite3")
 	if err != nil {
 		panic(err)
 	}
-	err = AddURL(db, URL{Link: "https://pkg.go.dev/"})
-
 	fmt.Println("db")
 	return err
 }
