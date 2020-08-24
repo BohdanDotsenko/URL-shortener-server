@@ -32,6 +32,6 @@ func NewLink(link URL, db *sql.DB) error {
 	if err != nil {
 
 	}
-	fmt.Println(row)
+	fmt.Printf(row)
 	return err
 }
