@@ -8,6 +8,11 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type URL struct {
+	LongLink  string
+	ShortLink string
+}
+
 func main() {
 	fmt.Println("Hello")
 	db, err := db.PrepeareDb()
@@ -15,7 +20,8 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
-
+	var URL URL = URL{"dasdasd", "sadasdas"}
+	NewLink(URL, db)
 	// srv, err := newServer(db)
 
 	// srv, err := newServer()
