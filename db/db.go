@@ -26,12 +26,13 @@ func PrepeareDb() (*sql.DB, error) {
 	return db, err
 }
 
-// NewLink adding
-func NewLink(link URL, db *sql.DB) error {
-	row, err := db.Query("SELECT * FROM URL WHERE LongLink=?", link.LongLink)
-	if err != nil {
-
+// NewURL adding
+func NewURL(link string, db *sql.DB) error {
+	row, err := db.Query("SELECT * FROM URL WHERE LongLink=?", link)
+	if err == nil {
+		fmt.Printf("here")
 	}
-	fmt.Printf(row)
+	defer row.Close()
+	fmt.Printf("here")
 	return err
 }
