@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/BohdanDotsenko/URL-shortener-server/db"
@@ -9,13 +8,13 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello")
 	database, err := db.PrepeareDb()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer database.Close()
-	db.NewURL("Helel", database)
+	var url = db.URL{LongURL: "asgfagagadgsadas", ShortURL: "safasfaf"}
+	db.NewURL(url, database)
 	// srv, err := newServer(db)
 
 	// srv, err := newServer()

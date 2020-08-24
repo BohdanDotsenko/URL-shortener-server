@@ -18,7 +18,8 @@ func PrepeareDb() (*sql.DB, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS URL (LongURL TEXT, ShortURL TEXT)")
+	prepeare := `CREATE TABLE IF NOT EXISTS URL (LongURL TEXT, ShortURL TEXT)`
+	statement, err := db.Prepare(prepeare)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,15 +27,34 @@ func PrepeareDb() (*sql.DB, error) {
 	return db, err
 }
 
-// NewURL adding
-func NewURL(link string, database *sql.DB) error {
-	row, err := database.Query("SELECT * FROM URL WHERE LongURL=?", link)
+// ExistURL ?
+func ExistURL(str string, database *sql.DB) bool {
+	exist := `SELECT LongURL FROM URL WHERE LongURL = ?`
+	err := database.QueryRow(exist, str).Scan(&str)
 	if err != nil {
-		statement, _ := database.Prepare("INSERT INTO URL (LongURL) VALUES (?)")
-		statement.Exec()
-		fmt.Printf("here\n")
+		if err != sql.ErrNoRows {
+			log.Print(err)
+		}
+		return false
 	}
-	defer row.Close()
-	fmt.Printf("no here\n")
+	return true
+}
+
+// NewURL adding
+func NewURL(URL URL, database *sql.DB) error {
+	if ExistURL(URL.LongURL, database) {
+		fmt.Printf("URL already exist in database\n")
+		return nil
+	}
+	insertSQL := `INSERT INTO URL (LongURL, ShortURL) VALUES (?, ?)`
+	statement, err := database.Prepare(insertSQL)
+	statement.Exec(URL.LongURL, URL.ShortURL)
+	fmt.Printf("URL successfully added in database\n")
 	return err
+}
+
+//GetShortURL from database
+func GetShortURL(longURL string) (string, error) {
+
+	return "", nil
 }
