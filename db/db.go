@@ -2,12 +2,14 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 )
 
-type links struct {
+// URL struct like in database
+type URL struct {
 	LongLink  string
-	ShotrLink string
+	ShortLink string
 }
 
 //PrepeareDb prepeare database
@@ -16,10 +18,20 @@ func PrepeareDb() (*sql.DB, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS links (LongLink TEXT, ShotrLink TEXT)")
+	statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS URL (LongLink TEXT, ShortLink TEXT)")
 	if err != nil {
 		log.Fatal(err)
 	}
 	statement.Exec()
 	return db, err
+}
+
+// NewLink adding
+func NewLink(link URL, db *sql.DB) error {
+	row, err := db.Query("SELECT * FROM URL WHERE LongLink=?", link.LongLink)
+	if err != nil {
+
+	}
+	fmt.Println(row)
+	return err
 }
