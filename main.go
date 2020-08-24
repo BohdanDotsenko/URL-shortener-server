@@ -20,8 +20,6 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	var URL URL = URL{"dasdasd", "sadasdas"}
-	NewLink(URL, db)
 	// srv, err := newServer(db)
 
 	// srv, err := newServer()
