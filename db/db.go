@@ -8,8 +8,8 @@ import (
 
 // URL struct like in database
 type URL struct {
-	LongLink  string
-	ShortLink string
+	LongURL  string
+	ShortURL string
 }
 
 //PrepeareDb prepeare database
@@ -18,7 +18,7 @@ func PrepeareDb() (*sql.DB, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS URL (LongLink TEXT, ShortLink TEXT)")
+	statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS URL (LongURL TEXT, ShortURL TEXT)")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,12 +27,14 @@ func PrepeareDb() (*sql.DB, error) {
 }
 
 // NewURL adding
-func NewURL(link string, db *sql.DB) error {
-	row, err := db.Query("SELECT * FROM URL WHERE LongLink=?", link)
-	if err == nil {
-		fmt.Printf("here")
+func NewURL(link string, database *sql.DB) error {
+	row, err := database.Query("SELECT * FROM URL WHERE LongURL=?", link)
+	if err != nil {
+		statement, _ := database.Prepare("INSERT INTO URL (LongURL) VALUES (?)")
+		statement.Exec()
+		fmt.Printf("here\n")
 	}
 	defer row.Close()
-	fmt.Printf("here")
+	fmt.Printf("no here\n")
 	return err
 }

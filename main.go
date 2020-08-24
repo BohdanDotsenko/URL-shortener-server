@@ -10,12 +10,12 @@ import (
 
 func main() {
 	fmt.Println("Hello")
-	db, err := db.PrepeareDb()
+	database, err := db.PrepeareDb()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
-	NewURL("URL", db)
+	defer database.Close()
+	db.NewURL("Helel", database)
 	// srv, err := newServer(db)
 
 	// srv, err := newServer()
