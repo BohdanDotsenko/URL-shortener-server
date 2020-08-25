@@ -1,3 +1,3 @@
 # URL-shortener-server
 
-'''go run main.go'''
+ʼʼʼgo run main.goʼʼʼ
