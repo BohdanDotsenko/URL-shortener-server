@@ -53,6 +53,14 @@ func NewURL(URL URL, database *sql.DB) error {
 	return err
 }
 
+func generateID() string {
+	b := make([]byte, 5)
+	// for i := range b {
+	// 	b[i] = symbols[rand.Int63()%int64(len(symbols))]
+	// }
+	return string(b)
+}
+
 //GetShortURL from database
 func GetShortURL(longURL string) (string, error) {
 
