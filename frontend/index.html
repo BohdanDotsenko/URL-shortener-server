@@ -9,13 +9,13 @@
 <body>
     <div style="width: 600px; margin-top: 100px; margin-left: auto; margin-right: auto ;">
         <h1>URL shortener</h1>
-        {{ if . }}
+        {{ if .ShortURL }}
             <div style="margin-bottom:20px; margin-top: 20px;">
-                <p>Short URL: <a href="{{ . }}">{{ . }}</a></p>
+                <p>Short URL: <a href="{{ .ShortURL }}">{{ .ShortURL }}</a></p>
             </div>
         {{ end }}
         <form method="POST">
-            <input type="text" name="original" placeholder="paste a link to shorten it" style="width: 500px;"/>
+            <input type="url" id ="original" name="original" placeholder="paste a link to shorten it" style="width: 500px;"/>
             <input type="submit"/>
         </form>
     </div>

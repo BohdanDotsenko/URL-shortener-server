@@ -7,30 +7,36 @@ import (
 )
 
 // URL struct like in database
-type URL struct {
+type Links struct {
 	LongURL  string
 	ShortURL string
 }
 
 //PrepeareDb prepeare database
-func PrepeareDb() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", "db/db.sqlite3")
+func PrepeareDb() error {
+	database, err := sql.Open("sqlite3", "db/db.sqlite3")
 	if err != nil {
 		log.Fatal(err)
 	}
-	prepeare := `CREATE TABLE IF NOT EXISTS URL (LongURL TEXT, ShortURL TEXT)`
-	statement, err := db.Prepare(prepeare)
+	defer database.Close()
+	prepeare := `CREATE TABLE IF NOT EXISTS Links (LongURL TEXT, ShortURL TEXT)`
+	statement, err := database.Prepare(prepeare)
 	if err != nil {
 		log.Fatal(err)
 	}
 	statement.Exec()
-	return db, err
+	return  err
 }
 
 // ExistURL ?
-func ExistURL(str string, database *sql.DB) bool {
-	exist := `SELECT LongURL FROM URL WHERE LongURL = ?`
-	err := database.QueryRow(exist, str).Scan(&str)
+func ExistURL(str string) bool {
+	database, err := sql.Open("sqlite3", "db/db.sqlite3")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer database.Close()
+	exist := `SELECT LongURL FROM Links WHERE LongURL = ?`
+	err = database.QueryRow(exist, str).Scan(&str)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			log.Print(err)
@@ -41,25 +47,19 @@ func ExistURL(str string, database *sql.DB) bool {
 }
 
 // NewURL adding
-func NewURL(URL URL, database *sql.DB) error {
-	if ExistURL(URL.LongURL, database) {
-		fmt.Printf("URL already exist in database\n")
-		return nil
+func NewURL(Links Links) error {
+	database, err := sql.Open("sqlite3", "db/db.sqlite3")
+	if err != nil {
+		log.Fatal(err)
 	}
-	insertSQL := `INSERT INTO URL (LongURL, ShortURL) VALUES (?, ?)`
+	defer database.Close()
+	insertSQL := `INSERT INTO Links (LongURL, ShortURL) VALUES (?, ?)`
 	statement, err := database.Prepare(insertSQL)
-	statement.Exec(URL.LongURL, URL.ShortURL)
+	statement.Exec(Links.LongURL, Links.ShortURL)
 	fmt.Printf("URL successfully added in database\n")
 	return err
 }
 
-func generateID() string {
-	b := make([]byte, 5)
-	// for i := range b {
-	// 	b[i] = symbols[rand.Int63()%int64(len(symbols))]
-	// }
-	return string(b)
-}
 
 //GetShortURL from database
 func GetShortURL(longURL string) (string, error) {
