@@ -62,7 +62,21 @@ func NewURL(Links Links) error {
 
 
 //GetShortURL from database
-func GetShortURL(longURL string) (string, error) {
+func GetLongURL(shortURL string) string {
+	var LongURL string
+	database, err := sql.Open("sqlite3", "db/db.sqlite3")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer database.Close()
+	row, err := database.Query("SELECT * FROM Links WHERE shortURL=?", shortURL)
+	if err != nil {
+		return ""
+	}
+	defer row.Close()
+	for row.Next() {
+		row.Scan(&LongURL, &shortURL)
+	}
 
-	return "", nil
+	return LongURL
 }

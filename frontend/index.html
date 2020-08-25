@@ -11,7 +11,7 @@
         <h1>URL shortener</h1>
         {{ if .ShortURL }}
             <div style="margin-bottom:20px; margin-top: 20px;">
-                <p>Short URL: <a href="{{ .ShortURL }}">{{ .ShortURL }}</a></p>
+                <p>Short URL: <a id="link" name="link" href="{{ .ShortURL }}">{{ .ShortURL }}</a></p>
             </div>
         {{ end }}
         <form method="POST">
