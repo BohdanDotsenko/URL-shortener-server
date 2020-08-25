@@ -25,6 +25,13 @@ func PrepeareDb() error {
 		log.Fatal(err)
 	}
 	statement.Exec()
+	var Links Links
+	Links.ShortURL = `123sa`
+	Links.LongURL = `https://www.google.com.ua/`
+	if ExistURL(Links.LongURL) {
+		return err
+	}
+	NewURL(Links)
 	return  err
 }
 
@@ -77,6 +84,5 @@ func GetLongURL(shortURL string) string {
 	for row.Next() {
 		row.Scan(&LongURL, &shortURL)
 	}
-
 	return LongURL
 }
