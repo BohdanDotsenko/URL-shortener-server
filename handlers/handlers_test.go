@@ -1,50 +1,42 @@
 package handlers
 
-import (	
-	"io/ioutil"
+import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	_ "github.com/mattn/go-sqlite3"
+	"github.com/BohdanDotsenko/URL-shortener-server/db"
 )
 
 type TestCase struct {
-	ID         string
-	Response   string
+	Link string
 	StatusCode int
 }
 
-func TestHTMLHandler(t *testing.T)  {
+func TestRedirectHandler(t *testing.T) {
+	var Links db.Links
+	Links.ShortURL = "1234567"
+	Links.LongURL = "https://www.google.com.ua/"
+	db.NewURL(Links)
 	cases := []TestCase{
 		TestCase{
-			ID:         "42",
-			Response:   `{"status": 200, "resp": {"user": 42}}`,
+			Link: "1234567",
 			StatusCode: http.StatusOK,
 		},
 		TestCase{
-			ID:         "500",
-			Response:   `{"status": 500, "err": "db_error"}`,
-			StatusCode: http.StatusInternalServerError,
+			Link: "/",
+			StatusCode: http.StatusNotFound,
 		},
 	}
 	for caseNum, item := range cases {
-		url := "http://example.com/api/user?id=" + item.ID
-		req := httptest.NewRequest("GET", url, nil)
+		// cases[caseNum].Link = "/"
+		req := httptest.NewRequest("GET", cases[caseNum].Link, nil)
 		w := httptest.NewRecorder()
 
-		HTMLHandler(w, req)
-
+		RedirectHandler(w, req)
 		if w.Code != item.StatusCode {
 			t.Errorf("[%d] wrong StatusCode: got %d, expected %d",
 				caseNum, w.Code, item.StatusCode)
-		}
-
-		resp := w.Result()
-		body, _ := ioutil.ReadAll(resp.Body)
-
-		bodyStr := string(body)
-		if bodyStr != item.Response {
-			t.Errorf("[%d] wrong Response: got %+v, expected %+v",
-				caseNum, bodyStr, item.Response)
 		}
 	}
 }

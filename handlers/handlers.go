@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+
 	"github.com/BohdanDotsenko/URL-shortener-server/db"
 	"github.com/gorilla/mux"
 	"html/template"
@@ -45,8 +45,6 @@ func RedirectHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	Links.ShortURL = vars["id"]
 	Links.LongURL = db.GetLongURL(Links.ShortURL)
-	fmt.Println("Links.LongURL : ")
-	fmt.Println(Links.LongURL)
 	if Links.LongURL == "" {
 		http.NotFound(w, r)
 	} else {
