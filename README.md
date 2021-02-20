@@ -14,3 +14,4 @@ retrieve the shortened version from server.
 SQLite
 
 <code>go run main.go</code>
+start use http://localhost:8181/
