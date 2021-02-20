@@ -18,10 +18,6 @@ type TestCase struct {
 
 func TestRedirectHandler(t *testing.T) {
 	cases := []TestCase{
-		// TestCase{
-		// 	Link: "1234567",
-		// 	StatusCode: http.StatusOK,
-		// },
 		TestCase{
 			Link: "/",
 			StatusCode: http.StatusNotFound,
@@ -50,7 +46,7 @@ func TestHTMLHandlerTest(t *testing.T) {
 		},
 	}
 	for caseNum, item := range cases {
-		// cases[caseNum].Link = "/"
+
 		req := httptest.NewRequest("POST", cases[caseNum].Link, nil)
 		w := httptest.NewRecorder()
 		HTMLHandlerTest(w, req)

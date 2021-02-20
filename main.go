@@ -11,11 +11,16 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func main() {
-	err := db.PrepeareDb()
-	if err != nil {
-		log.Fatal(err)
+
+
+func init() {
+	if err := db.PrepeareDb(); err != nil {
+		fmt.Println("Errror prepare db", err)
 	}
+}
+
+func main() {
+	
 	router := mux.NewRouter()
 	router.HandleFunc("/{id:[0-9a-zA-Z]+}", handlers.RedirectHandler).Methods("GET")
 	router.HandleFunc("/", handlers.HTMLHandler).Methods("GET")

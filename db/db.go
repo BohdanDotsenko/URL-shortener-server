@@ -3,7 +3,6 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"log"
 )
 
 // URL struct like in database
@@ -16,22 +15,15 @@ type Links struct {
 func PrepeareDb() error {
 	database, err := sql.Open("sqlite3", "db/db.sqlite3")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("db.go -> PrepareDB() -> sql.Open() error : ", err)
 	}
 	defer database.Close()
 	prepeare := `CREATE TABLE IF NOT EXISTS Links (LongURL TEXT, ShortURL TEXT)`
 	statement, err := database.Prepare(prepeare)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("db.go -> PrepeareDb() -> Prepare() error : ", err)
 	}
 	statement.Exec()
-	var Links Links
-	Links.ShortURL = `123sa`
-	Links.LongURL = `https://www.google.com.ua/`
-	if ExistURL(Links.LongURL) {
-		return err
-	}
-	NewURL(Links)
 	return  err
 }
 
@@ -39,14 +31,14 @@ func PrepeareDb() error {
 func ExistURL(str string) bool {
 	database, err := sql.Open("sqlite3", "db/db.sqlite3")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("db.go -> ExistURL() -> PrepareDB() error : ", err)
 	}
 	defer database.Close()
 	exist := `SELECT LongURL FROM Links WHERE LongURL = ?`
 	err = database.QueryRow(exist, str).Scan(&str)
 	if err != nil {
 		if err != sql.ErrNoRows {
-			log.Print(err)
+			fmt.Println("db.go -> ExistURL() -> QueryRow() error: ", err)
 		}
 		return false
 	}
@@ -57,7 +49,7 @@ func ExistURL(str string) bool {
 func NewURL(Links Links) error {
 	database, err := sql.Open("sqlite3", "db/db.sqlite3")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("db.go -> NewURL() -> sql.Open() error: ", err)
 	}
 	defer database.Close()
 	insertSQL := `INSERT INTO Links (LongURL, ShortURL) VALUES (?, ?)`
@@ -73,7 +65,7 @@ func GetLongURL(shortURL string) string {
 	var LongURL string
 	database, err := sql.Open("sqlite3", "db/db.sqlite3")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("db.go -> GetLongURL() -> sql.Open() error: ", err)
 	}
 	defer database.Close()
 	row, err := database.Query("SELECT * FROM Links WHERE shortURL=?", shortURL)

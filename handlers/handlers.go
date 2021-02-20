@@ -1,31 +1,19 @@
 package handlers
 
 import (
-
+	"fmt"
 	"github.com/BohdanDotsenko/URL-shortener-server/db"
 	"github.com/gorilla/mux"
 	"html/template"
-	"log"
-	"math/rand"
 	"net/http"
-	"time"
 )
 
-func generateShortLink() string {
-	rand.Seed(time.Now().UnixNano())
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	b := make([]rune, 5)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(b)
-}
 
 func HTMLHandler(w http.ResponseWriter, r *http.Request) {
 	var Links db.Links
 	err := r.ParseForm()
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println("handlers.go -> HTMLHandler -> ParseForm() error: ", err)
 	}
 	Links.LongURL = r.Form.Get("original")
 	if Links.LongURL != "" {
@@ -34,7 +22,8 @@ func HTMLHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	t, err := template.ParseFiles("./frontend/index.html")
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println("handlers.go -> HTMLHandler -> ParseFiles() error: ", err)
+
 	}
 
 	t.Execute(w, Links)
